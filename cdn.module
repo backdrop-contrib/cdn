@@ -46,6 +46,10 @@ function cdn_file_url_alter(&$original_uri) {
       if (!in_array($scheme, $local_schemes)) {
         return;
       }
+      // Explicitly exclude the local private:// stream wrapper.
+      elseif ($scheme === 'private') {
+        return;
+      }
 
       // Attempt to get an external URL using the appropriate wrapper.
       if ($wrapper = file_stream_wrapper_get_instance_by_uri($original_uri)) {

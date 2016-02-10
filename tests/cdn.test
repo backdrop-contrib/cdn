@@ -20,6 +20,9 @@ class CDNUnitTestCase extends DrupalUnitTestCase {
     $_SERVER = $alt_server;
     $this->setRequestProtocol('http');
 
+    // Enable the private:// stream wrapper.
+    $this->variableSet('file_private_path', conf_path() . '/files/private');
+
     // Pretend the CDN module is enabled; this ensures invocations of its own
     // hook implementations will work as expected.
     $cdn_module_file = drupal_get_path('module', 'cdn') . '/cdn.module';
@@ -327,6 +330,12 @@ class CDNOriginPullTestCase extends CDNUnitTestCase {
     cdn_file_url_alter($uri);
     $expected = 'http://cdn-a.com' . base_path() . variable_get('file_public_path', conf_path() . '/files') . '/' . drupal_encode_path($filename);
     $this->assertIdentical($uri, $expected, 'cdn_file_url_alter() works correctly.');
+
+    // Test that private:// file URLs are not altered.
+    $uri = "private://$filename";
+    $expected = $uri;
+    cdn_file_url_alter($uri);
+    $this->assertIdentical($uri, $expected, 'cdn_file_url_alter() excludes private:// files.');
   }
 }
 
