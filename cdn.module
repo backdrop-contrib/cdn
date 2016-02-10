@@ -932,6 +932,7 @@ function cdn_load_include($basename) {
 function cdn_post_render_html_alter($html, $elements = array()) {
   cdn_load_include('fallback');
   cdn_html_alter_image_urls($html);
+  cdn_html_alter_anchor_urls($html);
   return $html;
 }
 
