@@ -243,6 +243,56 @@ function cdn_element_info_alter(&$type) {
 }
 
 /**
+ * Implements hook_css_alter().
+ *
+ * Ensure that CDN-blacklisted CSS files are not aggregated, so that the CSS
+ * aggregates can still be served from the CDN.
+ */
+function cdn_css_alter(&$css) {
+  if (!cdn_status_is_enabled()) {
+    return;
+  }
+
+  foreach (array_keys($css) as $key) {
+    // Skip $type = 'inline'.
+    if (is_numeric($key)) {
+      continue;
+    }
+    // Handle $type = 'file' and 'external'.
+    elseif (!cdn_check_file($key)) {
+      $javascript[$key]['preprocess'] = FALSE;
+    }
+  }
+}
+
+/**
+ * Implements hook_js_alter().
+ *
+ * Ensure that CDN-blacklisted JS files are not aggregated, so that the JS
+ * aggregates can still be served from the CDN.
+ */
+function cdn_js_alter(&$javascript) {
+  if (!cdn_status_is_enabled()) {
+    return;
+  }
+
+  foreach (array_keys($javascript) as $key) {
+    // Skip $type = 'inline'.
+    if (is_numeric($key)) {
+      continue;
+    }
+    // Skip $type = 'setttings'.
+    elseif ($key === 'settings') {
+      continue;
+    }
+    // Handle $type = 'file' and 'external'.
+    elseif (!cdn_check_file($key)) {
+      $javascript[$key]['preprocess'] = FALSE;
+    }
+  }
+}
+
+/**
  * Implements hook_menu().
  */
 function cdn_menu() {
