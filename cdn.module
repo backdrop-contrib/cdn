@@ -496,7 +496,7 @@ function cdn_html_head_alter(&$head_elements) {
     // Enable prefetching.
     $head_elements['cdn_dns_prefetch_meta'] = array(
       '#type' => 'html_tag',
-      '#tag' => 'link',
+      '#tag' => 'meta',
       '#attributes' => array(
         'http-equiv' => 'x-dns-prefetch-control',
         'content'    => 'on',
