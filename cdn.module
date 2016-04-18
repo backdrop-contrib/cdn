@@ -264,7 +264,7 @@ function cdn_css_alter(&$css) {
     }
     // Handle $type = 'file' and 'external'.
     elseif (!cdn_check_file($key)) {
-      $javascript[$key]['preprocess'] = FALSE;
+      $css[$key]['preprocess'] = FALSE;
     }
   }
 }
