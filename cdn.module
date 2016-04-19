@@ -350,7 +350,7 @@ function cdn_menu() {
   );
 
   // Origin Pull mode's Far Future expiration support.
-  $items['cdn/farfuture/%/%/%/%menu_tail'] = array(
+  $items['cdn/farfuture/%/%/%menu_tail'] = array(
     'title'            => 'Download a far futured file',
     'access callback'  => TRUE,
     'page callback'    => 'cdn_basic_farfuture_download',
