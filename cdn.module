@@ -257,6 +257,13 @@ function cdn_css_alter(&$css) {
     return;
   }
 
+  // If all CSS files are blacklisted, return early, otherwise we'd end up
+  // disabling preprocessing (aggregation) for every CSS file, hence disabling
+  // aggregation altogether.
+  if (!cdn_check_file('*.css')) {
+    return;
+  }
+
   foreach (array_keys($css) as $key) {
     // Skip $type = 'inline'.
     if (is_numeric($key)) {
@@ -277,6 +284,13 @@ function cdn_css_alter(&$css) {
  */
 function cdn_js_alter(&$javascript) {
   if (!cdn_status_is_enabled()) {
+    return;
+  }
+
+  // If all JS files are blacklisted, return early, otherwise we'd end up
+  // disabling preprocessing (aggregation) for every JS file, hence disabling
+  // aggregation altogether.
+  if (!cdn_check_file('*.js')) {
     return;
   }
 
