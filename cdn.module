@@ -571,6 +571,8 @@ function cdn_boot() {
     // @see http://googlewebmastercentral.blogspot.com/2011/06/supporting-relcanonical-http-headers.html
     header('Link: <' . $redirect_url . '>; rel="canonical"');
     header('Location: ' . $redirect_url);
+    // Informative header to simplify debugging.
+    header('Drupal-CDN-Redirect: duplicate content prevention');
 
     // To ensure this redirect occurs immediately we don't use drupal_exit().
     exit();
