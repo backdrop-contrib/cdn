@@ -563,7 +563,14 @@ function cdn_boot() {
   // return static files like images, CSS files, JavaScript files, etc. By
   // default it will return anything. Since those static files aren't served by
   // Drupal.
-  $redirect_url = _cdn_seo_should_redirect(current_path());
+  $redirect_url = FALSE;
+  // Since SEO redirection is performed in hook_boot(), modules implementing a
+  // custom SEO redirect callback need to implement hook_boot() as well or the
+  // function won't be available yet.
+  $seo_redirect_callback = variable_get(CDN_SEO_REDIRECT_CALLBACK_VARIABLE, CDN_SEO_REDIRECT_CALLBACK_DEFAULT);
+  if (function_exists($seo_redirect_callback)) {
+    $redirect_url = $seo_redirect_callback(current_path());
+  }
   if ($redirect_url !== FALSE) {
     // A 301 is SEO friendly, as it tells the search engine what the canonical
     // URL is for this content.

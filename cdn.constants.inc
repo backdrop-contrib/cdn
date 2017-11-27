@@ -42,6 +42,8 @@ define('CDN_SEO_USER_AGENTS_VARIABLE', 'cdn_seo_user_agents');
 define('CDN_SEO_USER_AGENTS_DEFAULT', "Amazon Cloudfront\nAkamai");
 define('CDN_SEO_FORBIDDEN_EXTENSIONS_VARIABLE', "cdn_seo_forbidden_extensions");
 define('CDN_SEO_FORBIDDEN_EXTENSIONS_DEFAULT', "html\nhtm\nphp");
+define('CDN_SEO_REDIRECT_CALLBACK_VARIABLE', 'cdn_seo_redirect_callback');
+define('CDN_SEO_REDIRECT_CALLBACK_DEFAULT', '_cdn_seo_should_redirect');
 
 // Variables for basic mode.
 define('CDN_BASIC_MAPPING_VARIABLE', 'cdn_basic_mapping');
