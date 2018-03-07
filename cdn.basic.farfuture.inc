@@ -110,7 +110,7 @@ function cdn_basic_farfuture_download($token, $ufi, $path) {
     // see:
     // - https://bitsup.blogspot.be/2016/05/cache-control-immutable.html
     // - https://tools.ietf.org/html/draft-mcmanus-immutable-00
-    header('Cache-Control', 'max-age=290304000, no-transform, public, immutable');
+    header('Cache-Control: max-age=290304000, no-transform, public, immutable');
     // Set a far future Expires header. The maximum UNIX timestamp is somewhere
     // in 2038. Set it to a date in 2037, just to be safe.
     header("Expires: Tue, 20 Jan 2037 04:20:42 GMT");
