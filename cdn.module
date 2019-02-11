@@ -1,10 +1,8 @@
 <?php
-
 /**
  * @file
  * Implements the core hooks, public and private functions.
  */
-
 
 require_once('cdn.constants.inc');
 
@@ -555,9 +553,9 @@ function cdn_boot() {
   }
 
   // Inspired by common.inc/_drupal_bootstrap_full().
-  require_once DRUPAL_ROOT . '/includes/common.inc';
-  require_once DRUPAL_ROOT . '/' . variable_get('path_inc', 'includes/path.inc');
-  require_once DRUPAL_ROOT . '/includes/unicode.inc';
+  require_once DRUPAL_ROOT . '/core/includes/common.inc';
+  require_once DRUPAL_ROOT . '/core/includes/path.inc';
+  require_once DRUPAL_ROOT . '/core/includes/unicode.inc';
 
   // Prevent the CDN from returning content pages. We only want the CDN to
   // return static files like images, CSS files, JavaScript files, etc. By

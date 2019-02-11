@@ -583,7 +583,6 @@ function _cdn_settings_form_prepare(&$form, $form_state) {
     _cdn_admin_check_requirements();
 
     // Advanced help.
-    _cdn_check_advanced_help();
     $form['#attributes']['class'][] = 'cdn-settings';
     $form['#attached']['css'][] = drupal_get_path('module', 'cdn') . '/cdn.admin.css';
   }
@@ -592,38 +591,6 @@ function _cdn_settings_form_prepare(&$form, $form_state) {
   $form['#submit'] = array('cdn_admin_settings_submit_show_cache_warning');
 }
 
-function _cdn_check_advanced_help() {
-  if (!module_exists('advanced_help')) {
-    $sql = "SELECT filename
-            FROM {system}
-            WHERE type = 'module'
-            AND name = 'advanced_help'";
-    $filename = db_query($sql)->fetchField();
-    if ($filename && file_exists($filename)) {
-      drupal_set_message(t(
-        'If you enable the <a href="@modules-url">Advanced Help</a> module,
-        the CDN module will provide more and better help.',
-        array('@modules-url' => url('admin/modules'))
-      ));
-    }
-    else {
-      drupal_set_message(t(
-        'If you install the <a href="@adv-help-url">Advanced Help</a> module,
-        the CDN module will provide more and better help.',
-        array('@adv-help-url' => url('http://drupal.org/project/advanced_help'))
-      ));
-    }
-  }
-}
-
 function _cdn_help($topic) {
-  if (!module_exists('advanced_help')) {
-    return '';
-  }
-  else {
-    return theme(
-      'advanced_help_topic',
-      array('module' => 'cdn', 'topic' => $topic)
-    );
-  }
+  return '';
 }
