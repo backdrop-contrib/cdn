@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Logic for basic mode ("Origin Pull mode" in the UI).
@@ -25,7 +24,7 @@ function cdn_basic_get_servers($path) {
   }
 
   // Parse the file extension from the given path; convert it to lower case.
-  $file_extension = drupal_strtolower(pathinfo($path, PATHINFO_EXTENSION));
+  $file_extension = backdrop_strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
   // Based on the file extension, determine which key should be used to find
   // the CDN URLs in the mapping lookup table, if any.
@@ -103,7 +102,7 @@ function _cdn_basic_parse_raw_mapping($mapping_raw) {
       if (strpos($line, '|') !== FALSE) {
         $parts = explode('|', $line);
         $cdn_urls = explode(' ', trim($parts[0]));
-        $extensions = explode(' ', trim(str_replace('.', '', drupal_strtolower($parts[1])))); // Convert to lower case, remove periods, whitespace and split on ' '.
+        $extensions = explode(' ', trim(str_replace('.', '', backdrop_strtolower($parts[1])))); // Convert to lower case, remove periods, whitespace and split on ' '.
       }
       else {
         $cdn_urls   = explode(' ', trim($line));

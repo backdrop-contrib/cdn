@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Fallback when hook_file_url_alter() is not available (i.e. when the core
@@ -107,7 +106,7 @@ function _cdn_generate_url_prefix_regex() {
  *   anchor links.
  */
 function _cdn_html_alter_file_url(&$html, $pattern, $search_index, $path_index, $querystring_index, $prefix, $suffix, $comparison_index = FALSE, $require_extension_match = FALSE) {
-  $mapping = &drupal_static(__FUNCTION__ . '$mapping');
+  $mapping = &backdrop_static(__FUNCTION__ . '$mapping');
 
   // Find a match against the given pattern.
   preg_match_all($pattern, $html, $matches);
@@ -141,7 +140,7 @@ function _cdn_html_alter_file_url(&$html, $pattern, $search_index, $path_index, 
         cdn_load_include('basic');
         $mapping = _cdn_basic_parse_raw_mapping(cdn_basic_get_mapping());
       }
-      $file_extension = drupal_strtolower(pathinfo($path, PATHINFO_EXTENSION));
+      $file_extension = backdrop_strtolower(pathinfo($path, PATHINFO_EXTENSION));
       if (!array_key_exists($file_extension, $mapping)) {
         continue;
       }
@@ -150,10 +149,10 @@ function _cdn_html_alter_file_url(&$html, $pattern, $search_index, $path_index, 
     // Store the current path as the old path, then let cdn_file_url_alter()
     // do its magic by invoking all file_url_alter hooks. When the path hasn't
     // changed and is not already root-relative or protocol-relative, then
-    // generate a file URL as Drupal core would: prepend the base path.
+    // generate a file URL as Backdrop core would: prepend the base path.
     $old_path = $path;
-    drupal_alter('file_url', $path);
-    if ($path == $old_path && drupal_substr($path, 0, 1) != '/' && drupal_substr($path, 0, 2) != '//') {
+    backdrop_alter('file_url', $path);
+    if ($path == $old_path && backdrop_substr($path, 0, 1) != '/' && backdrop_substr($path, 0, 2) != '//') {
       $path = base_path() . $path;
     }
 

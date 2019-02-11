@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Settings administration UI.
@@ -230,11 +229,11 @@ function cdn_admin_other_settings_form($form, &$form_state) {
   if (variable_get(CDN_MODE_VARIABLE, CDN_MODE_BASIC) == CDN_MODE_ADVANCED) {
     $form[CDN_DRUPAL_ROOT_VARIABLE] = array(
       '#type' => 'textfield',
-      '#title' => t('Drupal root directory'),
+      '#title' => t('Backdrop root directory'),
       '#description' => t(
         'In 99% of the cases the default value is sufficient and correct. In
         some advanced setups that make use of symbolic links however, it is
-        possible that the Drupal root directory is incorrectly detected. In
+        possible that the Backdrop root directory is incorrectly detected. In
         those cases, you should enter it here.<br />
         <strong>This setting only affects the status report, it does not affect
         the CDN integration itself in any way.</strong>'
@@ -313,11 +312,7 @@ function cdn_admin_other_settings_form($form, &$form_state) {
     '#type' => 'fieldset',
     '#title' => t('Exceptions'),
     '#description' => _cdn_help('admin-other-exceptions') .
-                      t('Which files should be served from a CDN is not as
-                         simple as it seems: there are bound to be exceptions.
-                         You can easily define those exceptions here, either
-                         by file URL, Drupal path or by Drupal path for
-                         authenticated users.'),
+                      t('Which files should be served from a CDN is not as simple as it seems: there are bound to be exceptions. You can easily define those exceptions here, either by file URL, Backdrop path or by Backdrop path for authenticated users.'),
   );
 
   $form['exceptions']['file_path'] = array(
@@ -362,21 +357,21 @@ function cdn_admin_other_settings_form($form, &$form_state) {
     '#description' => $path_explanation,
   );
 
-  $form['exceptions']['drupal_path'] = array(
+  $form['exceptions']['backdrop_path'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Drupal path'),
-    '#description' => t("Drupal paths entered in this blacklist will not serve
+    '#title' => t('Backdrop path'),
+    '#description' => t("Backdrop paths entered in this blacklist will not serve
                          any files from the CDN. This blacklist is applied for
                          <em>all</em> users."),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
-  $form['exceptions']['drupal_path'][CDN_EXCEPTION_DRUPAL_PATH_BLACKLIST_VARIABLE] = array(
+  $form['exceptions']['backdrop_path'][CDN_EXCEPTION_DRUPAL_PATH_BLACKLIST_VARIABLE] = array(
     '#type' => 'textarea',
     '#title' => t('Blacklist'),
     '#default_value' => variable_get(CDN_EXCEPTION_DRUPAL_PATH_BLACKLIST_VARIABLE, CDN_EXCEPTION_DRUPAL_PATH_BLACKLIST_DEFAULT),
     '#description' => t(
-      "Enter one page per line as Drupal paths. The '*' character is a
+      "Enter one page per line as Backdrop paths. The '*' character is a
       wildcard. Example paths are %blog for the blog page and %blog-wildcard
       for every personal blog. %front is the front page.",
       array(
@@ -389,8 +384,8 @@ function cdn_admin_other_settings_form($form, &$form_state) {
 
   $form['exceptions']['auth_users'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Drupal path for authenticated users'),
-    '#description' => t("Drupal paths entered in this blacklist will not serve
+    '#title' => t('Backdrop path for authenticated users'),
+    '#description' => t("Backdrop paths entered in this blacklist will not serve
                          any files from the CDN. This blacklist is applied for
                          <em>authenticated users only</em>."),
     '#collapsible' => TRUE,
@@ -432,8 +427,8 @@ function cdn_admin_details_form_validate($form, &$form_state) {
     $nays = array();
     foreach ($domains as $domain) {
       $url = 'http://' . $domain . base_path() . 'cdn/farfuture/reverse-proxy-test/' . $token . '/file.txt';
-      $r1 = drupal_http_request($url);
-      $r2 = drupal_http_request($url);
+      $r1 = backdrop_http_request($url);
+      $r2 = backdrop_http_request($url);
       unset($r1->headers);
       unset($r2->headers);
       $args = array('%domain' => $domain);
@@ -445,20 +440,20 @@ function cdn_admin_details_form_validate($form, &$form_state) {
           $nays[] = t('%domain is a static file server.', $args);
         }
         else {
-          $nays[] = t('%domain uses the same web server as this Drupal site.', $args);
+          $nays[] = t('%domain uses the same web server as this Backdrop site.', $args);
         }
       }
     }
     variable_set('cdn_reverse_proxy_test', FALSE);
     if (!empty($yays)) {
-      drupal_set_message(t('Perfect domains: !yay-list',
+      backdrop_set_message(t('Perfect domains: !yay-list',
         array(
           '!yay-list' => theme('item_list', array('items' => $yays)),
         )
       ));
     }
     if (!empty($nays)) {
-      drupal_set_message(t('Potentially problematic domains: !nay-list',
+      backdrop_set_message(t('Potentially problematic domains: !nay-list',
         array(
           '!nay-list' => theme('item_list', array('items' => $nays)),
         )
@@ -485,7 +480,7 @@ function cdn_admin_other_settings_form_validate($form, &$form_state) {
  * settings have been changed: the caches might need to be cleared.
  */
 function cdn_admin_settings_submit_show_cache_warning($form, &$form_state) {
-  drupal_set_message(t('You have just changed some settings. This might affect
+  backdrop_set_message(t('You have just changed some settings. This might affect
                         the file URLs that have been cached in nodes, views,
                         aggregated CSS files or elsewhere.<br />
                         You now may want to clear all caches, to ensure that
@@ -559,7 +554,7 @@ function _cdn_admin_check_requirements() {
     }
   }
   if (!empty($errors)) {
-    drupal_set_message(
+    backdrop_set_message(
       t(
           'The CDN module has detected the following <em>potential</em>
           problems in its configuration:<br />
@@ -584,7 +579,7 @@ function _cdn_settings_form_prepare(&$form, $form_state) {
 
     // Advanced help.
     $form['#attributes']['class'][] = 'cdn-settings';
-    $form['#attached']['css'][] = drupal_get_path('module', 'cdn') . '/cdn.admin.css';
+    $form['#attached']['css'][] = backdrop_get_path('module', 'cdn') . '/cdn.admin.css';
   }
 
   // Form.

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Constants used by the CDN module.
@@ -22,7 +21,7 @@ define('CDN_MODE_BASIC', 'basic');
 define('CDN_MODE_ADVANCED', 'advanced');
 define('CDN_STATUS_VARIABLE', 'cdn_status');
 define('CDN_STATS_VARIABLE', 'cdn_stats');
-define('CDN_DRUPAL_ROOT_VARIABLE', 'cdn_drupal_root');
+define('CDN_DRUPAL_ROOT_VARIABLE', 'cdn_backdrop_root');
 define('CDN_HTTPS_SUPPORT_VARIABLE', 'cdn_https_support');
 
 // Variables for exceptions.
@@ -30,7 +29,7 @@ define('CDN_EXCEPTION_FILE_PATH_BLACKLIST_VARIABLE', 'cdn_exception_file_path_bl
 define('CDN_EXCEPTION_FILE_PATH_BLACKLIST_DEFAULT',  "");
 define('CDN_EXCEPTION_FILE_PATH_WHITELIST_VARIABLE', 'cdn_exception_file_path_whitelist');
 define('CDN_EXCEPTION_FILE_PATH_WHITELIST_DEFAULT',  "misc/*.js\nmodules/*.js");
-define('CDN_EXCEPTION_DRUPAL_PATH_BLACKLIST_VARIABLE', 'cdn_exception_drupal_path_blacklist');
+define('CDN_EXCEPTION_DRUPAL_PATH_BLACKLIST_VARIABLE', 'cdn_exception_backdrop_path_blacklist');
 define('CDN_EXCEPTION_DRUPAL_PATH_BLACKLIST_DEFAULT',  'file/ajax/*');
 define('CDN_EXCEPTION_AUTH_USERS_BLACKLIST_VARIABLE', 'cdn_exception_auth_users_blacklist');
 define('CDN_EXCEPTION_AUTH_USERS_BLACKLIST_DEFAULT', 'admin*');
@@ -56,7 +55,7 @@ define('CDN_BASIC_FARFUTURE_GZIP_EXTENSIONS', "css\njs\nico\nsvg\neot\notf\nttf"
 define('CDN_BASIC_FARFUTURE_GZIP_DIRECTORY', "cdn/farfuture/gzip");
 define('CDN_BASIC_FARFUTURE_REMOVE_HEADERS', "Set-Cookie\nETag");
 define('CDN_BASIC_FARFUTURE_UNIQUE_IDENTIFIER_MAPPING_VARIABLE', 'cdn_farfuture_unique_identifier_mapping');
-define('CDN_BASIC_FARFUTURE_UNIQUE_IDENTIFIER_MAPPING_DEFAULT', "misc/*:modules/*:themes/*|drupal_version\nsites/*|mtime\nsites/*|.avi .m4v .mov .mp4 .wmv .flv|perpetual");
+define('CDN_BASIC_FARFUTURE_UNIQUE_IDENTIFIER_MAPPING_DEFAULT', "misc/*:modules/*:themes/*|backdrop_version\nsites/*|mtime\nsites/*|.avi .m4v .mov .mp4 .wmv .flv|perpetual");
 define('CDN_BASIC_FARFUTURE_UNIQUE_IDENTIFIER_DEFAULT', 'mtime');
 
 // Variables for advanced mode.

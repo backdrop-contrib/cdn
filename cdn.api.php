@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Hooks provided by the CDN module.
@@ -14,7 +13,7 @@
  * @return string[]
  *   A set of path patterns.
  *
- * @see drupal_match_path()
+ * @see backdrop_match_path()
  */
 function hook_cdn_blacklist() {
   $blacklist = array();
@@ -44,7 +43,7 @@ function hook_cdn_blacklist() {
  * @param string[] &$blacklist
  *   A set of path patterns.
  *
- * @see drupal_match_path()
+ * @see backdrop_match_path()
  */
 function hook_cdn_blacklist_alter(&$blacklist) {
   unset($blacklist[1]);

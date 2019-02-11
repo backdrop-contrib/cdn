@@ -1,7 +1,7 @@
 
 Description
 -----------
-This module provide easy Content Delivery Network integration for Drupal sites.
+This module provide easy Content Delivery Network integration for Backdrop sites.
 It alters file URLs, so that files are downloaded from a CDN instead of your
 web server.
 
@@ -76,9 +76,7 @@ Supported CDNs
 Installation
 ------------
 1) Place this module directory in your "modules" folder (this will usually be
-   "sites/all/modules/"). Don't install your module in Drupal core's "modules"
-   folder, since that will cause problems and is bad practice in general. If
-   "sites/all/modules" doesn't exist yet, just create it.
+   "sites/all/modules/").
 
 2) Enable the module.
 
@@ -87,9 +85,9 @@ Installation
 4) Go to your CDN provider's control panel and set up a "CDN instance" (Amazon
    CloudFront calls this a "distribution"). There, you will have to specify
    the origin server (Amazon CloudFront calls this a "custom origin"), which
-   is simply the domain name of your Drupal site.
+   is simply the domain name of your Backdrop site.
    The CDN will provide you with a "delivery address", this is the address
-   that we'll use to download files from the CDN instead of the Drupal server.
+   that we'll use to download files from the CDN instead of the Backdrop server.
    Suppose this is `http://d85nwn7m5gl3y.cloudfront.net`.
    Be sure to forward query strings from the CDN to the origin! Otherwise image
    style derivatives will not work.
@@ -171,15 +169,15 @@ The Far Future expiration functionality takes care of this automatically!
 
 FAQ
 ---
-Q: Is the CDN module compatible with Drupal's page caching?
+Q: Is the CDN module compatible with Backdrop's page caching?
 A: Yes.
 
-Q: Is the CDN module compatible with Drupal's "private files" functionality?
+Q: Is the CDN module compatible with Backdrop's "private files" functionality?
 A: Yes. The CDN module won't break private files, they will continue to work
    the same way. However, it cannot serve private files from a CDN. Not every
    CDN supports protected/secured/authenticated file access, and those that do
    each have their own way of doing this (there is no standard). So private
-   files will continue to be served by Drupal, which may or may not be
+   files will continue to be served by Backdrop, which may or may not be
    acceptable for your use case.
 
 Q: Why are JavaScript files not being served from the CDN?
@@ -200,7 +198,7 @@ Q: How to use different CDNs based on the domain name of an i18n site?
 A: See http://drupal.org/node/1483962#comment-5744830.
 
 Q: Why are old CDN Far Future URLs not working?
-A: Your Drupal site's private key or hash salt have changed. See
+A: Your Backdrop site's private key or hash salt have changed. See
    https://www.drupal.org/node/1844786#comment-6832244 for details.
 
 No cookies should be sent to the CDN
@@ -219,8 +217,6 @@ You can achieve this in two ways:
      you should be careful to avoid JavaScript issues: you may run into "same
      origin policy" problems. See admin/config/development/cdn/other for
      details.
-
-Drupal 7 no longer sets cookies for anonymous users.
 
 If you just use the CDN's URL (e.g. myaccount.cdn.com), all cookie issues are
 avoided automatically.
@@ -274,7 +270,7 @@ your .htaccess file:
 
     # Instead of being powered by Apache, tell the world this resource was
     # powered by the CDN module's .htaccess!
-    Header set X-Powered-By "Drupal CDN module (.htaccess)" env=FARFUTURE_CDN
+    Header set X-Powered-By "Backdrop CDN module (.htaccess)" env=FARFUTURE_CDN
 
     # Instruct intermediate HTTP caches to store both a compressed (gzipped) and
     # uncompressed version of the resource.

@@ -1,11 +1,10 @@
 <?php
-
 /**
  * @file
  * Test CDN.
  */
 
-class CDNUnitTestCase extends DrupalUnitTestCase {
+class CDNUnitTestCase extends BackdropUnitTestCase {
   function setUp() {
     parent::setUp();
 
@@ -25,18 +24,18 @@ class CDNUnitTestCase extends DrupalUnitTestCase {
 
     // Pretend the CDN module is enabled; this ensures invocations of its own
     // hook implementations will work as expected.
-    $cdn_module_file = drupal_get_path('module', 'cdn') . '/cdn.module';
+    $cdn_module_file = backdrop_get_path('module', 'cdn') . '/cdn.module';
     $module_list['system']['filename'] = 'modules/system/system.module';
     $module_list['cdn']['filename'] = $cdn_module_file;
     module_list(TRUE, FALSE, FALSE, $module_list);
-    $implementations = &drupal_static('module_implements');
+    $implementations = &backdrop_static('module_implements');
     $implementations = array();
 
     $this->loadFile('cdn.constants.inc');
     $this->loadFile('cdn.module');
 
     // Override $conf to be able to use variable_set() and variable_get() in
-    // DrupalUnitTestCase. At the same time, make sure we can restore the
+    // BackdropUnitTestCase. At the same time, make sure we can restore the
     // original values.
     global $conf;
     $this->originalConfig = $conf;
@@ -52,7 +51,7 @@ class CDNUnitTestCase extends DrupalUnitTestCase {
   }
 
   function loadFile($file) {
-    $cdn_path = DRUPAL_ROOT . '/' . drupal_get_path('module', 'cdn');
+    $cdn_path = DRUPAL_ROOT . '/' . backdrop_get_path('module', 'cdn');
     require_once "$cdn_path/$file";
   }
 
@@ -129,7 +128,7 @@ class CDNUnitTestCase extends DrupalUnitTestCase {
    * @param $uri
    *   @see file_stream_wrapper_get_instance_by_uri()
    * @return
-   *  A Drupal root-relative path.
+   *  A Backdrop root-relative path.
    */
   function getExpandedFilePath($uri) {
     $wrapper = file_stream_wrapper_get_instance_by_uri($uri);
@@ -149,13 +148,13 @@ class CDNUnitTestCase extends DrupalUnitTestCase {
   }
 }
 
-class CDNWebTestCase extends DrupalWebTestCase {
+class CDNWebTestCase extends BackdropWebTestCase {
   function setUp() {
     parent::setUp('cdn');
   }
 
   function loadFile($file) {
-    $cdn_path = DRUPAL_ROOT . '/' . drupal_get_path('module', 'cdn');
+    $cdn_path = DRUPAL_ROOT . '/' . backdrop_get_path('module', 'cdn');
     require_once "$cdn_path/$file";
   }
 }
@@ -328,7 +327,7 @@ class CDNOriginPullTestCase extends CDNUnitTestCase {
     $this->touchFile($uri);
 
     cdn_file_url_alter($uri);
-    $expected = 'http://cdn-a.com' . base_path() . variable_get('file_public_path', conf_path() . '/files') . '/' . drupal_encode_path($filename);
+    $expected = 'http://cdn-a.com' . base_path() . variable_get('file_public_path', conf_path() . '/files') . '/' . backdrop_encode_path($filename);
     $this->assertIdentical($uri, $expected, 'cdn_file_url_alter() works correctly.');
 
     // Test that private:// file URLs are not altered.
@@ -491,10 +490,10 @@ class CDNOriginPullFarFutureTestCase extends CDNUnitTestCase {
     $path_info = pathinfo($filename);
     $expected = implode('/', array(
       'http://cdn-a.com' . base_path() . 'cdn/farfuture',
-      drupal_hmac_base64('perpetual:forever' . $path_info['filename'], drupal_get_private_key() . drupal_get_hash_salt()),
+      backdrop_hmac_base64('perpetual:forever' . $path_info['filename'], backdrop_get_private_key() . backdrop_get_hash_salt()),
       'perpetual:forever',
       variable_get('file_public_path', conf_path() . '/files'),
-      drupal_encode_path($filename)
+      backdrop_encode_path($filename)
     ));
     $this->assertIdentical($uri, $expected, 'cdn_file_url_alter() works correctly.');
   }
@@ -659,13 +658,13 @@ class CDNCssUrlTestCase extends CDNWebTestCase {
     $css_info = array(
       array(
         'type' => 'file',
-        'data' => drupal_get_path('module', 'cdn') . '/tests/css/orig/url.css',
+        'data' => backdrop_get_path('module', 'cdn') . '/tests/css/orig/url.css',
       ),
     );
     try {
       // Make sure the URL in the supplied CSS file matches what we expect.
       // trim() is needed to avoid issues with differences in newlines.
-      $this->assertEqual(trim(file_get_contents(_cdn_build_css_cache($css_info))), '.home{background:url('. $base_url . '/' . drupal_get_path('module', 'cdn') . '/tests/css/orig/geo-md-webfont.eot?#iefix);}');
+      $this->assertEqual(trim(file_get_contents(_cdn_build_css_cache($css_info))), '.home{background:url('. $base_url . '/' . backdrop_get_path('module', 'cdn') . '/tests/css/orig/geo-md-webfont.eot?#iefix);}');
     } catch (Exception $exc) {
       $this->fail($exc);
     }

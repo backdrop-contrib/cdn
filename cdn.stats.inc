@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Per-page CDN integration statistics functionality.
@@ -18,8 +17,8 @@ function cdn_touch_file_form($form, &$form_state) {
   }
 
   if (!file_exists($filepath)) {
-    drupal_set_message(t('The file %filepath does not exist and thus could not be touched.', array('%filepath' => $filepath)), 'error');
-    drupal_goto($form_state['storage']['redirect']);
+    backdrop_set_message(t('The file %filepath does not exist and thus could not be touched.', array('%filepath' => $filepath)), 'error');
+    backdrop_goto($form_state['storage']['redirect']);
   }
   else {
     $form_state['filepath'] = $filepath;
@@ -46,12 +45,12 @@ function cdn_touch_file_form($form, &$form_state) {
 function cdn_touch_file_form_submit($form, &$form_state) {
   $filepath = $form_state['filepath'];
   if (touch(_cdn_get_absolute_path($filepath))) {
-    drupal_set_message(t('Successfully touched %filepath.', array('%filepath' => $filepath)));
+    backdrop_set_message(t('Successfully touched %filepath.', array('%filepath' => $filepath)));
   }
   else {
-    drupal_set_message(t('Failed to touch %filepath. Likely you do not have sufficient permissions.', array('%filepath' => $filepath)));
+    backdrop_set_message(t('Failed to touch %filepath. Likely you do not have sufficient permissions.', array('%filepath' => $filepath)));
   }
-  drupal_goto($form_state['storage']['redirect']);
+  backdrop_goto($form_state['storage']['redirect']);
 }
 
 
@@ -141,10 +140,10 @@ function _cdn_devel_page_stats($file = FALSE, $file_cdn_url = FALSE, $server = F
  *   The absolute path.
  */
 function _cdn_get_absolute_path($uri) {
-  static $drupal_root_path;
+  static $backdrop_root_path;
 
-  if (!isset($drupal_root_path)) {
-    $drupal_root_path = dirname('.');
+  if (!isset($backdrop_root_path)) {
+    $backdrop_root_path = dirname('.');
   }
 
   $absolute_path = '';
@@ -154,7 +153,7 @@ function _cdn_get_absolute_path($uri) {
     }
   }
   else {
-    $absolute_path = realpath($drupal_root_path . '/' . $uri);
+    $absolute_path = realpath($backdrop_root_path . '/' . $uri);
   }
   return $absolute_path;
 }

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Far Future expiration setting for basic mode.
@@ -12,14 +11,14 @@
 function cdn_basic_farfuture_download($token, $ufi, $path) {
   // Validate the token to make sure this request originated from CDN.
   $path_info = pathinfo($path);
-  $sec_token = drupal_hmac_base64($ufi . $path_info['filename'], drupal_get_private_key() . drupal_get_hash_salt());
+  $sec_token = backdrop_hmac_base64($ufi . $path_info['filename'], backdrop_get_private_key() . backdrop_get_hash_salt());
   if ($token != $sec_token) {
     header('HTTP/1.1 403 Forbidden');
     exit();
   }
 
   // Disallow downloading of files that are also not allowed to be downloaded
-  // by Drupal's .htaccess file.
+  // by Backdrop's .htaccess file.
   if (preg_match("/\.(engine|inc|info|install|make|module|profile|test|po|sh|php([3-6])?|phtml|.*sql|theme|tpl(\.php)?|xtmpl)$|^(\..*|Entries.*|Repository|Root|Tag|Template)$/", $path)) {
     header('HTTP/1.1 403 Forbidden');
     exit();
@@ -75,7 +74,7 @@ function cdn_basic_farfuture_download($token, $ufi, $path) {
 
   // Instead of being powered by PHP, tell the world this resource was powered
   // by the CDN module!
-  header("X-Powered-By: Drupal CDN module");
+  header("X-Powered-By: Backdrop CDN module");
   // Determine the content type.
   header("Content-Type: " . _cdn_basic_farfuture_get_mimetype(basename($path)));
   // Support partial content requests.
@@ -90,7 +89,7 @@ function cdn_basic_farfuture_download($token, $ufi, $path) {
   // extensions (by default: images, fonts and flash content), then cache it
   // in the far future.
   $farfuture_extensions  = variable_get(CDN_BASIC_FARFUTURE_EXTENSIONS_VARIABLE, CDN_BASIC_FARFUTURE_EXTENSIONS_DEFAULT);
-  $extension = drupal_strtolower(pathinfo($path, PATHINFO_EXTENSION));
+  $extension = backdrop_strtolower(pathinfo($path, PATHINFO_EXTENSION));
   if (in_array($extension, explode("\n", $farfuture_extensions))) {
     // Remove all previously set Cache-Control headers, because we're going to
     // override it. Since multiple Cache-Control headers might have been set,
@@ -130,7 +129,7 @@ function cdn_basic_farfuture_download($token, $ufi, $path) {
     if (in_array($extension, explode("\n", CDN_BASIC_FARFUTURE_GZIP_EXTENSIONS))) {
       // Ensure a gzipped version of the file is stored on disk, instead of
       // gzipping the file on every request.
-      $gzip_path = drupal_realpath('public://') . '/' . CDN_BASIC_FARFUTURE_GZIP_DIRECTORY . "/$path.$ufi.gz";
+      $gzip_path = backdrop_realpath('public://') . '/' . CDN_BASIC_FARFUTURE_GZIP_DIRECTORY . "/$path.$ufi.gz";
       if (!file_exists($gzip_path)) {
         _cdn_basic_farfuture_create_directory_structure(dirname($gzip_path));
         file_put_contents($gzip_path, gzencode(file_get_contents($path), 9));
@@ -204,9 +203,9 @@ function cdn_basic_farfuture_get_ufi_method($path, $mapping) {
   $ufi_method = FALSE;
   $current_specificity = 0;
   foreach (array_keys($mapping) as $directory) {
-    if (drupal_match_path($path, $directory)) {
+    if (backdrop_match_path($path, $directory)) {
       // Parse the file extension from the given path; convert it to lower case.
-      $file_extension = drupal_strtolower(pathinfo($path, PATHINFO_EXTENSION));
+      $file_extension = backdrop_strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
       // Based on the file extension, determine which key should be used to find
       // the CDN URLs in the mapping lookup table, if any.
@@ -303,12 +302,12 @@ function _cdn_basic_farfuture_parse_raw_mapping($mapping_raw) {
       // - part 3: unique file identifier method
       if (count($parts) == 2) {
         $extensions = array('*'); // Use the asterisk as a wildcard.
-        $ufi_method = drupal_strtolower(trim($parts[1]));
+        $ufi_method = backdrop_strtolower(trim($parts[1]));
       }
       elseif (count($parts) == 3) {
         // Convert to lower case, remove periods, whitespace and split on ' '.
-        $extensions = explode(' ', trim(str_replace('.', '', drupal_strtolower($parts[1]))));
-        $ufi_method = drupal_strtolower(trim($parts[2]));
+        $extensions = explode(' ', trim(str_replace('.', '', backdrop_strtolower($parts[1]))));
+        $ufi_method = backdrop_strtolower(trim($parts[2]));
       }
 
       // Create the mapping lookup table.
@@ -330,7 +329,7 @@ function _cdn_basic_farfuture_parse_raw_mapping($mapping_raw) {
 }
 
 /**
- * Variant of Drupal's file_transfer(), based on
+ * Variant of Backdrop's file_transfer(), based on
  *  http://www.thomthom.net/blog/2007/09/php-resumable-download-server/
  * to support ranged requests as well.
  *
@@ -408,7 +407,7 @@ function _cdn_transfer_file($path) {
 
 /**
  * Determine an Internet Media Type, or MIME type from a filename.
- * Borrowed from Drupal 7.
+ * Borrowed from Backdrop 7.
  *
  * @param $path
  *   A string containing the file path.
@@ -437,7 +436,7 @@ function _cdn_basic_farfuture_get_mimetype($path) {
   //   - image.jpeg, and
   //   - awesome.image.jpeg
   while ($additional_part = array_pop($file_parts)) {
-    $extension = drupal_strtolower($additional_part . ($extension ? '.' . $extension : ''));
+    $extension = backdrop_strtolower($additional_part . ($extension ? '.' . $extension : ''));
     if (isset($mapping['extensions'][$extension])) {
       return $mapping['mimetypes'][$mapping['extensions'][$extension]];
     }
@@ -450,7 +449,7 @@ function _cdn_basic_farfuture_get_mimetype($path) {
  * Perform a nested HTTP request to generate a file.
  *
  * @param $path
- *   A path relative to the Drupal root (not urlencoded!) to the file that
+ *   A path relative to the Backdrop root (not urlencoded!) to the file that
  *   should be generated.
  * @param $original_uri
  *   The original url if available.
@@ -476,7 +475,7 @@ function _cdn_basic_farfuture_generate_file($path, $original_uri = NULL) {
     exit();
   }
 
-  $url = $GLOBALS['base_url'] . '/' . drupal_encode_path($path);
+  $url = $GLOBALS['base_url'] . '/' . backdrop_encode_path($path);
 
   // If this is an image style url ensure the image style token is set. Since we
   // have just limited information to work with the evaluation is quite complex.
@@ -487,7 +486,7 @@ function _cdn_basic_farfuture_generate_file($path, $original_uri = NULL) {
     $parts = explode('/', $original_uri, 6);
     $orinal_image_path = $scheme . '://' . $parts[5];
     $token_query = array(IMAGE_DERIVATIVE_TOKEN => image_style_path_token($parts[3], $orinal_image_path));
-    $url .= (strpos($path, '?') !== FALSE ? '&' : '?') . drupal_http_build_query($token_query);
+    $url .= (strpos($path, '?') !== FALSE ? '&' : '?') . backdrop_http_build_query($token_query);
   }
 
   $headers = array(
@@ -496,7 +495,7 @@ function _cdn_basic_farfuture_generate_file($path, $original_uri = NULL) {
     'Cache-Control' => 'no-cache',
     'Pragma'        => 'no-cache',
   );
-  drupal_http_request($url, array('headers' => $headers));
+  backdrop_http_request($url, array('headers' => $headers));
 
   $exists = file_exists($path);
   watchdog(

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Install, update and uninstall functions for the CDN module.
@@ -112,7 +111,7 @@ function cdn_requirements($phase) {
 
           if ($synced_files_db !== FALSE) {
             $persistent_data_db = str_replace(CDN_DAEMON_SYNCED_FILES_DB, CDN_DAEMON_PERSISTENT_DATA_DB, $synced_files_db);
-            $drupal_root_path = variable_get(CDN_DRUPAL_ROOT_VARIABLE, realpath('.'));
+            $backdrop_root_path = variable_get(CDN_DRUPAL_ROOT_VARIABLE, realpath('.'));
 
             $synced_files_db_exists      = file_exists($synced_files_db);
             $synced_files_db_readable    = @fopen($synced_files_db, 'r');
@@ -123,7 +122,7 @@ function cdn_requirements($phase) {
             cdn_load_include('advanced');
             $db = _cdn_advanced_get_db_connection();
             if ($db !== FALSE) {
-              $input_file_mask = $drupal_root_path . '%';
+              $input_file_mask = $backdrop_root_path . '%';
               $sql = "SELECT COUNT(*) AS count, server
                       FROM synced_files
                       WHERE input_file LIKE :input_file
@@ -241,7 +240,7 @@ function cdn_update_6201() {
  */
 function cdn_update_6202() {
   db_query("UPDATE {system} SET weight = 10000 WHERE name = 'cdn'");
-  // update.php runs drupal_rebuild_theme_registry();
+  // update.php runs backdrop_rebuild_theme_registry();
 
   return t('Ensured the CDN module runs after the JavaScript aggregator module.');
 }
@@ -257,7 +256,7 @@ function cdn_update_6203() {
 }
 
 /**
- * Fallback mode is not needed in Drupal 7, hence also no more need for an
+ * Fallback mode is not needed in Backdrop 7, hence also no more need for an
  * altered module weight.
  */
 function cdn_update_7200() {
@@ -271,7 +270,7 @@ function cdn_update_7210() {
   $ret = array();
 
   if (variable_get('cdn_mode', FALSE) == 'advanced') {
-    // Only do this if cdn_update_6210() for the Drupal 6 version of this
+    // Only do this if cdn_update_6210() for the Backdrop 6 version of this
     // module hasn't run.
     if (variable_get('cdn_advanced_pid_file', FALSE) != FALSE) {
       $synced_files_db = variable_get('cdn_advanced_synced_files_db', FALSE);

@@ -2,7 +2,7 @@
 <config>
   <!-- Sources -->
   <sources>
-    <source name="drupal" scanPath="/htdocs/drupal" documentRoot="/htdocs" basePath="/drupal/" />
+    <source name="backdrop" scanPath="/htdocs/backdrop" documentRoot="/htdocs" basePath="/backdrop/" />
   </sources>
 
   <!-- Servers -->
@@ -25,7 +25,7 @@
     Add all JavasSript, CSS, image and flash files from the most common
     directories in Drupal. Don't forget to add your site-specific directories!
     -->
-    <rule for="drupal" label="JS, CSS, images, fonts and Flash">
+    <rule for="backdrop" label="JS, CSS, images, fonts and Flash">
       <filter>
         <paths>misc:profiles:modules:themes:sites/all:sites/default:sites/YOURSITE.COM</paths>
         <extensions>ico:js:css:gif:png:jpg:jpeg:svg:otf:ttf:swf</extensions>
@@ -46,7 +46,7 @@
     Add all files in the files/css directory, *but* update the URLs in the
     files. This is only necessary if we use CSS aggregation.
     -->
-    <rule for="drupal" label="CSS aggregation">
+    <rule for="backdrop" label="CSS aggregation">
       <filter>
         <paths>sites/default/files/css</paths>
         <ignoredDirs>CVS:.svn</ignoredDirs>
@@ -65,7 +65,7 @@
     Add all files in the files/js directory. This is only necessary if we use
     JS aggregation.
     -->
-    <rule for="drupal" label="JS aggregation">
+    <rule for="backdrop" label="JS aggregation">
       <filter>
         <paths>sites/default/files/js</paths>
         <ignoredDirs>CVS:.svn</ignoredDirs>

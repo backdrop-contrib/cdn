@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Theme functions.
@@ -121,8 +120,8 @@ function theme_cdn_page_stats($variables) {
     $items[] =  $item;
   }
 
-  $title = t('CDN integration statistics for %drupal_path', array(
-    '%drupal_path' => $_GET['q']
+  $title = t('CDN integration statistics for %backdrop_path', array(
+    '%backdrop_path' => $_GET['q']
   ));
   $output .= theme('item_list', array(
     'items' => $items,
@@ -137,8 +136,8 @@ function theme_cdn_page_stats($variables) {
  *
  * @param $variables
  *   An associative array containing:
- *   - file: A string containing the Drupal path (i.e. path relative to the
- *     Drupal root directory) of the file to generate the URL for.
+ *   - file: A string containing the Backdrop path (i.e. path relative to the
+ *     Backdrop root directory) of the file to generate the URL for.
  *   - absolute_path: The absolute path (on the filesystem) to the file.
  *   - synced: Whether this file has been synced to the CDN or not.
  *   - cdn_url: The CDN URL of the file, or the normal URL when the file is
@@ -165,7 +164,7 @@ function theme_cdn_page_stats_file_link($variables) {
   $touch_link = l(
     t('touch'),
     'admin/cdn/touch/' . $file,
-    array('query' => drupal_get_destination())
+    array('query' => backdrop_get_destination())
   );
 
   $output = '';

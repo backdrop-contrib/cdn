@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Overrides of Drupal's CSS aggregation system. Ensures that files referenced
@@ -9,14 +8,14 @@
 
 
 /**
- * Near-identical to @see drupal_aggregate_css().
+ * Near-identical to @see backdrop_aggregate_css().
  *
- * Changes: call _cdn_build_css_cache() instead of drupal_build_css_cache().
+ * Changes: call _cdn_build_css_cache() instead of backdrop_build_css_cache().
  */
 function _cdn_aggregate_css(&$css_groups) {
   // Don't override Drupal core's aggregation if this page is not going to use
   // a CDN anyway.
-  if (!cdn_check_protocol() && !cdn_check_drupal_path($_GET['q'])) {
+  if (!cdn_check_protocol() && !cdn_check_backdrop_path($_GET['q'])) {
     return;
   }
 
@@ -45,7 +44,7 @@ function _cdn_aggregate_css(&$css_groups) {
       case 'inline':
         $css_groups[$key]['data'] = '';
         foreach ($group['items'] as $item) {
-          $css_groups[$key]['data'] .= drupal_load_stylesheet_content($item['data'], $item['preprocess']);
+          $css_groups[$key]['data'] .= backdrop_load_stylesheet_content($item['data'], $item['preprocess']);
         }
         break;
     }
@@ -53,11 +52,11 @@ function _cdn_aggregate_css(&$css_groups) {
 }
 
 /**
- * Near-identical to @see drupal_build_css_cache().
+ * Near-identical to @see backdrop_build_css_cache().
  *
  * Changes:
  * - the inner loop is modified
- * - uses _cdn_build_css_path() instead of drupal_build_css_path().
+ * - uses _cdn_build_css_path() instead of backdrop_build_css_path().
  */
 function _cdn_build_css_cache($css, $suffix = '') {
   // Create different CSS aggregation maps for HTTP and HTTPS.
@@ -83,10 +82,10 @@ function _cdn_build_css_cache($css, $suffix = '') {
     foreach ($css as $stylesheet) {
       // Only 'file' stylesheets can be aggregated.
       if ($stylesheet['type'] == 'file') {
-        $contents = drupal_load_stylesheet($stylesheet['data'], TRUE);
+        $contents = backdrop_load_stylesheet($stylesheet['data'], TRUE);
 
         // Get the parent directory of this file, relative to the Drupal root.
-        $css_base_url = drupal_substr($stylesheet['data'], 0, strrpos($stylesheet['data'], '/'));
+        $css_base_url = backdrop_substr($stylesheet['data'], 0, strrpos($stylesheet['data'], '/'));
         _cdn_build_css_path(NULL, $css_base_url . '/');
 
         // Anchor all paths in the CSS with its base URL, ignoring external and absolute paths.
@@ -103,7 +102,7 @@ function _cdn_build_css_cache($css, $suffix = '') {
 
     // Prefix filename to prevent blocking by firewalls which reject files
     // starting with "ad*".
-    $filename = 'css_' . drupal_hash_base64($data) . $suffix . '.css';
+    $filename = 'css_' . backdrop_hash_base64($data) . $suffix . '.css';
     // Create the css/ within the files folder.
     $csspath = ($css_cache_var == 'cdn_css_cache_files_https')
       ? 'public://cdn/css/https'
@@ -131,12 +130,12 @@ function _cdn_build_css_cache($css, $suffix = '') {
 }
 
 /**
- * Near-identical to @see _drupal_build_css_path().
+ * Near-identical to @see _backdrop_build_css_path().
  *
  * Changes: apply file_create_url() to every file!
  */
 function _cdn_build_css_path($matches, $base = NULL) {
-  $_base = &drupal_static(__FUNCTION__);
+  $_base = &backdrop_static(__FUNCTION__);
   // Store base path for preg_replace_callback.
   if (isset($base)) {
     $_base = $base;
